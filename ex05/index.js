@@ -6,7 +6,7 @@ const handleClickBtOk = () => {
   const item = inputItem.value.trim();
   if (item) {
     lista.innerHTML += `<li>${item}</li>`;
-    lista.innerHTML += "<li>" + item + "</li>";
+    // lista.innerHTML += "<li>" + item + "</li>";
   }
   inputItem.value = "";
   inputItem.focus();
