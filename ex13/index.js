@@ -14,6 +14,29 @@ const inputDescricao = document.getElementById("inputDescricao");
 const btInserir = document.getElementById("btInserir");
 const inputNovaDescricao = document.getElementById("inputNovaDescricao");
 const btAlterar = document.getElementById("btAlterar");
+const btRemover = document.getElementById("btRemover");
+
+const handleClickBtRemover = async () => {
+  const id = inputID.value.trim();
+  if (!id) {
+    alert("Favor digitar um ID");
+    return;
+  }
+  const query = new Parse.Query(Tarefa);
+  try {
+    const tarefa = await query.get(id);
+    if (!tarefa) {
+      alert("Nenhuma tarefa encontrada!");
+      return;
+    }
+    const response = await tarefa.destroy();
+    console.log("Deleted ParseObject", response);
+    lerTarefas();
+    alert("Objeto removido: " + JSON.stringify(response));
+  } catch (error) {
+    console.error("Error while fetching Tarefa", error);
+  }
+};
 
 const handleClickBtAlterar = async () => {
   const id = inputID.value.trim();
@@ -102,3 +125,4 @@ lerTarefas();
 btPesquisar.onclick = handleClickBtPesquisar;
 btInserir.onclick = inserirTarefa;
 btAlterar.onclick = handleClickBtAlterar;
+btRemover.onclick = handleClickBtRemover;
