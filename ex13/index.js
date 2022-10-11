@@ -94,11 +94,31 @@ const lerTarefas = async () => {
     for (const tarefa of results) {
       const descricao = tarefa.get("descricao");
       const feita = tarefa.get("feita");
-      listaTarefas.innerHTML += `<li>${tarefa.id} ${descricao} - ${feita} </li>`;
+      const liTarefa = document.createElement("li");
+      const textNode = document.createTextNode(
+        `${tarefa.id} ${descricao} - ${feita} `
+      );
+      liTarefa.appendChild(textNode);
+      const btTarefa = document.createElement("button");
+      btTarefa.innerHTML = "Exibir";
+      btTarefa.onclick = () => exibirTarefa(tarefa);
+      liTarefa.appendChild(btTarefa);
+      listaTarefas.appendChild(liTarefa);
     }
   } catch (error) {
     console.error("Error while fetching Tarefa", error);
   }
+};
+
+const exibirTarefa = async (tarefa) => {
+  alert(
+    `Tarefa = ${tarefa.get("descricao")} - ` +
+      `feita = ${tarefa.get("feita") ? "sim" : "não"}`
+  );
+  tarefa.set("feita", !tarefa.get("feita"));
+  let result = await tarefa.save();
+  console.log("result", result);
+  lerTarefas();
 };
 
 const inserirTarefa = async () => {
