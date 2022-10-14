@@ -1,3 +1,11 @@
+const axiosInstance = axios.create({
+  baseURL: "https://parseapi.back4app.com/classes/",
+  headers: {
+    "X-Parse-Application-Id": "rqIwwZbTJx3mEAMKuWvW0c8N8S2wqkJBGkylLc8Y",
+    "X-Parse-REST-API-Key": "MFRNld05M6dorJqc4GxhJuBE4CkH6nkhFs2XTBPJ",
+  },
+});
+
 Parse.serverURL = "https://parseapi.back4app.com"; // This is your Server URL
 // Remember to inform BOTH the Back4App Application ID AND the JavaScript KEY
 Parse.initialize(
@@ -12,27 +20,50 @@ const btInserir = document.getElementById("btInserir");
 const divPaisagens = document.getElementById("divPaisagens");
 const inputImagem = document.getElementById("inputImagem");
 
+const lerPaisagensAxios = async () => {
+  try {
+    const response = await axiosInstance.get("Paisagem");
+    gerarLista(response.data.results);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const inserirPaisagemAxios = async () => {
+  try {
+    const response = await axiosInstance.post("Paisagem", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    gerarLista(response.data.results);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const lerPaisagens = async () => {
   const query = new Parse.Query(Paisagem);
   try {
     const results = await query.find();
-    divPaisagens.innerHTML = "";
-    for (const paisagem of results) {
-      const descricao = paisagem.get("descricao");
-      const imagem = paisagem.get("imagem");
-      const url = imagem.url();
-      const textNodeDescricao = document.createTextNode(descricao);
-      const brElement = document.createElement("br");
-      const imgElement = document.createElement("img");
-      imgElement.src = url;
-      const hrElement = document.createElement("hr");
-      divPaisagens.appendChild(textNodeDescricao);
-      divPaisagens.appendChild(brElement);
-      divPaisagens.appendChild(imgElement);
-      divPaisagens.appendChild(hrElement);
-    }
+    gerarLista(results);
   } catch (error) {
     console.error("Error while fetching Paisagem", error);
+  }
+};
+
+const gerarLista = (paisagens) => {
+  divPaisagens.innerHTML = "";
+  for (const paisagem of paisagens) {
+    const textNodeDescricao = document.createTextNode(paisagem.descricao);
+    const brElement = document.createElement("br");
+    const imgElement = document.createElement("img");
+    imgElement.src = paisagem.imagem.url;
+    const hrElement = document.createElement("hr");
+    divPaisagens.appendChild(textNodeDescricao);
+    divPaisagens.appendChild(brElement);
+    divPaisagens.appendChild(imgElement);
+    divPaisagens.appendChild(hrElement);
   }
 };
 
@@ -62,5 +93,5 @@ const inserirPaisagem = async () => {
   lerPaisagens();
 };
 
-lerPaisagens();
+lerPaisagensAxios();
 btInserir.onclick = inserirPaisagem;
