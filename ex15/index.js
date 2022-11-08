@@ -30,13 +30,37 @@ const lerPaisagensAxios = async () => {
 };
 
 const inserirPaisagemAxios = async () => {
+  const descricao = inputDescricao.value.trim();
+  if (!descricao) {
+    alert("Favor inserir uma descrição!");
+    return;
+  }
+  if (inputImagem.files.length === 0) {
+    alert("Favor selecionar uma imagem!");
+    return;
+  }
+  const imagem = inputImagem.files[0];
+  // console.log("imagem", imagem);
+  // console.log("imagem", imagem.type);
+  // console.log("imagem", imagem.stream());
+  // console.log("imagem", imagem.name);
+  // console.log("imagem", imagem.webkitRelativePath);
+  // imagem.arrayBuffer().then((data) => {
+  //   console.log("data", data);
+  // });
   try {
-    const response = await axiosInstance.post("Paisagem", {
-      headers: {
-        "Content-Type": "application/json",
+    const response = await axiosInstance.post(
+      "Paisagem",
+      {
+        descricao: descricao,
       },
-    });
-    gerarLista(response.data.results);
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log("response", response);
   } catch (error) {
     console.error(error);
   }
@@ -94,4 +118,4 @@ const inserirPaisagem = async () => {
 };
 
 lerPaisagensAxios();
-btInserir.onclick = inserirPaisagem;
+btInserir.onclick = inserirPaisagemAxios;

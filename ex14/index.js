@@ -20,7 +20,7 @@ const lerPaisagens = async () => {
     for (const paisagem of results) {
       const descricao = paisagem.get("descricao");
       const imagem = paisagem.get("imagem");
-      const url = imagem.url();
+      const url = imagem ? imagem.url() : "";
       const textNodeDescricao = document.createTextNode(descricao);
       const brElement = document.createElement("br");
       const imgElement = document.createElement("img");
